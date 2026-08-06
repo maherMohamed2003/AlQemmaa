@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>إدارة المستخدمين</title>
+
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">القمة</span>
+    <span class="brand-word">لوحة التحكم — منصّة القمة</span>
+  </div>
+  <div class="topbar-actions">
+    <span id="gnavMount"></span>
+  </div>
+</header>
+
+<nav class="dash-subnav">
+  <a href="../Dashboard/index.html">
+    <i class="fa-solid fa-chart-line"></i>
+    نظرة عامة
+  </a>
+  <a class="active" href="./index.html">
+    <i class="fa-solid fa-users"></i>
+    المستخدمين
+  </a>
+</nav>
+
+<div class="page">
+
+    <!-- Header -->
+    <div class="page-header">
+
+        <div>
+            <h2>المستخدمين</h2>
+            <span>إدارة جميع المستخدمين</span>
+        </div>
+
+        <div class="header-actions">
+
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="ابحث بالاسم أو الإيميل أو الهاتف..." />
+            </div>
+
+            <select id="yearFilter">
+                <option value="all">كل السنوات</option>
+                <option value="1">اولي اعدادي</option>
+                <option value="2">ثانية اعدادي</option>
+                <option value="3">ثالثة اعدادي</option>
+                <option value="4">اولي ثانوي</option>
+                <option value="5">ثانية ثانوي</option>
+                <option value="6">ثالثة ثانوي</option>
+            </select>
+
+            <button id="refreshBtn">
+                <i class="fa-solid fa-rotate-right"></i>
+                تحديث
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Loading -->
+
+    <div id="loading" class="loading">
+
+        <div class="loader"></div>
+        <p>جار تحميل المستخدمين...</p>
+
+    </div>
+
+    <!-- Empty -->
+
+    <div id="emptyState" class="empty hidden">
+
+        <i class="fa-regular fa-face-frown"></i>
+
+        <h3>لا يوجد مستخدمون</h3>
+
+    </div>
+
+    <!-- Table -->
+
+    <div id="tableContainer" class="table-wrapper hidden">
+
+        <table>
+
+            <thead>
+
+            <tr>
+
+                <th>#</th>
+
+                <th>الاسم</th>
+
+                <th>السنة</th>
+
+                <th>الهاتف</th>
+
+                <th>الإيميل</th>
+
+                <th>الصلاحية</th>
+
+                <th>محظور</th>
+
+                <th>متصل</th>
+
+                <th>الإجراءات</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody id="usersTable">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<!-- Template -->
+
+<template id="userRowTemplate">
+
+    <tr>
+
+        <td class="index"></td>
+
+        <td>
+
+            <div class="user">
+
+                <div class="avatar"></div>
+
+                <div>
+
+                    <h4 class="name"></h4>
+
+                </div>
+
+            </div>
+
+        </td>
+
+        <td class="year"></td>
+
+        <td class="phone"></td>
+
+        <td class="email"></td>
+
+        <td>
+
+            <span class="role"></span>
+
+        </td>
+
+        <td>
+
+            <label class="switch">
+
+                <input
+                    class="block-checkbox"
+                    type="checkbox" />
+
+                <span class="slider"></span>
+
+            </label>
+
+        </td>
+
+        <td>
+
+            <label class="switch disabled">
+
+                <input
+                    class="login-checkbox"
+                    disabled
+                    type="checkbox" />
+
+                <span class="slider"></span>
+
+            </label>
+
+        </td>
+
+        <td>
+
+            <div class="actions">
+
+                <button
+                    class="edit-btn"
+                    title="تعديل">
+
+                    <i class="fa-solid fa-pen"></i>
+
+                </button>
+
+                <button
+                    class="delete-btn"
+                    title="حذف">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                </button>
+
+            </div>
+
+        </td>
+
+    </tr>
+
+</template>
+
+<script src="../Shared/config.js"></script>
+<script src="../Shared/nav.js"></script>
+<script src="users.js"></script>
+
+</body>
+</html>

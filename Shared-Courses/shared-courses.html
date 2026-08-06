@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصّة القمة —  الفيديوهات المفتوحة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <!-- theme checkbox: works with zero JS via body:has() above -->
+  <input type="checkbox" id="themeSwitch">
+
+  <!-- حاويّة التنبيهات (Toasts) -->
+  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">القمة</span>
+      <span class="brand-word">مِنصّة القمة لتعليم اللغة العربية</span>
+    </div>
+    <div class="topbar-actions">
+      <span id="gnavMount"></span>
+      <label class="theme-toggle" for="themeSwitch" aria-label="تبديل الوضع الليلي/النهاري">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    </div>
+  </header>
+
+  <div class="page-head">
+    <div>
+      <span class="eyebrow">مفتوحة لكل الطلاب</span>
+      <h1 class="page-title"> الفيديوهات المفتوحة
+        <svg class="underline-ink" viewBox="0 0 130 13" aria-hidden="true"><path d="M3 7c18-5 35-5 52-1s44 4 72-2"/></svg>
+      </h1>
+    </div>
+    <button type="button" class="add-btn staff-only" style="display:none;" onclick="OpenAddModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      إضافة فيديو مفتوح
+    </button>
+  </div>
+
+  <main class="lessons-wrap">
+    <div id="html" class="lessons-grid"></div>
+  </main>
+
+  <!-- ============== مودال إضافة / تعديل كورس مشترك ============== -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 class="modal-title" id="editModalTitle">إضافة فيديو مفتوح</h2>
+        <a class="modal-close" onclick="CloseEditModal()" aria-label="إغلاق">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </a>
+      </div>
+      <form>
+        <div class="field">
+          <label for="courseTitle">عنوان الدرس</label>
+          <input type="text" id="courseTitle" name="Title" placeholder="مثال: مراجعة نهائية - قواعد اللغة العربية">
+        </div>
+        <div class="field">
+          <label for="courseDesc">وصف الدرس</label>
+          <textarea id="courseDesc" name="Description" placeholder="اكتب وصفًا مختصرًا لمحتوى الكورس..."></textarea>
+        </div>
+        <div class="field">
+          <label for="courseVideoUrl">رابط فيديو الدرس</label>
+          <input type="url" id="courseVideoUrl" name="VideoUrl" placeholder="الصق رابط الفيديو هنا (يوتيوب، فيميو، ...)" dir="ltr">
+        </div>
+        <input type="hidden" name="Id" value="">
+        <div class="modal-actions">
+          <a class="btn btn-ghost" href="javascript:void(0)" onclick="CloseEditModal()">إلغاء</a>
+          <button type="button" class="btn btn-primary" id="saveEditBtn" onclick="SaveCourse()">
+            <span class="btn-spinner" id="saveEditSpinner" hidden></span>
+            <span id="saveEditBtnText">حفظ</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============== مودال تأكيد الحذف ============== -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal confirm-modal">
+      <div class="confirm-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6h16z"/></svg>
+      </div>
+      <h2 class="modal-title" style="margin-bottom:10px;">حذف الكورس المشترك</h2>
+      <p class="confirm-text">هل أنت متأكد من حذف هذا الكورس؟ لا يمكن التراجع عن هذا الإجراء.</p>
+      <div class="modal-actions">
+        <a class="btn btn-ghost" href="javascript:void(0)" onclick="CloseDeleteModal()">إلغاء</a>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn" onclick="DeleteCourse()">
+          <span class="btn-spinner" id="confirmDeleteSpinner" hidden></span>
+          <span id="confirmDeleteBtnText">حذف نهائيًا</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== لايت بوكس تشغيل الفيديو ============== -->
+  <div class="modal-overlay video-modal" id="videoModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 class="modal-title">مشاهدة الكورس</h2>
+        <a class="modal-close" onclick="CloseVideoModal()" aria-label="إغلاق">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </a>
+      </div>
+      <div class="video-modal-box" id="videoModalBox">
+        <iframe
+          id="videoModalPlayer"
+          src=""
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          oncontextmenu="return false"></iframe>
+        <div class="video-watermark" id="videoModalWatermark"></div>
+        <div class="video-watermark-float" id="videoModalWatermarkFloat"></div>
+        <div class="dev-blur-notice">تم إيقاف الفيديو مؤقتًا لحماية المحتوى، من فضلك أغلق أدوات المطورين لمتابعة المشاهدة</div>
+      </div>
+      <div class="video-modal-meta">
+        <h3 id="videoModalTitle"></h3>
+        <p id="videoModalDesc"></p>
+        <span class="uploader-tag" id="videoModalUploader"></span>
+      </div>
+    </div>
+  </div>
+
+<script src="../Shared/config.js"></script>
+<script src="../Shared/nav.js"></script>
+<script src="./main.js"></script>
+</body>
+</html>

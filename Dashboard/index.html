@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>لوحة التحكم — نظرة عامة</title>
+
+    <link rel="stylesheet" href="../Users-List/style.css" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <style>
+        .dash-wrap{ padding:28px; }
+        .dash-title{ font-size:26px; margin-bottom:4px; }
+        .dash-sub{ color:var(--text-light); margin-bottom:26px; display:block; }
+
+        .stat-grid{
+            display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));
+            gap:18px; margin-bottom:28px;
+        }
+        .stat-card{
+            background:var(--card); border:1px solid var(--border); border-radius:16px;
+            padding:20px; box-shadow:var(--shadow);
+            display:flex; align-items:center; gap:14px;
+        }
+        .stat-icon{
+            width:46px; height:46px; border-radius:12px; flex-shrink:0;
+            display:flex; align-items:center; justify-content:center; font-size:18px; color:#fff;
+        }
+        .stat-icon.i1{ background:linear-gradient(135deg,#4f46e5,#4338ca); }
+        .stat-icon.i2{ background:linear-gradient(135deg,#0ea5a1,#0a746f); }
+        .stat-icon.i3{ background:linear-gradient(135deg,#d97706,#b45309); }
+        .stat-icon.i4{ background:linear-gradient(135deg,#e11d48,#9f1239); }
+        .stat-icon.i5{ background:linear-gradient(135deg,#22c55e,#15803d); }
+        .stat-icon.i6{ background:linear-gradient(135deg,#64748b,#334155); }
+        .stat-value{ font-size:22px; font-weight:800; }
+        .stat-label{ font-size:12.5px; color:var(--text-light); }
+
+        .panels{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+        @media (max-width: 780px){ .panels{ grid-template-columns:1fr; } }
+
+        .panel{
+            background:var(--card); border:1px solid var(--border); border-radius:16px;
+            padding:22px; box-shadow:var(--shadow);
+        }
+        .panel h3{ margin:0 0 16px; font-size:16px; }
+
+        .bar-row{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+        .bar-label{ width:120px; font-size:12.5px; color:var(--text-light); flex-shrink:0; }
+        .bar-track{ flex:1; height:10px; border-radius:6px; background:var(--bg-soft); overflow:hidden; }
+        .bar-fill{ height:100%; border-radius:6px; background:linear-gradient(90deg,#4f46e5,#818cf8); }
+        .bar-count{ width:34px; text-align:left; font-size:12.5px; font-weight:700; flex-shrink:0; }
+
+        .loading-row{ text-align:center; padding:50px 0; color:var(--text-light); }
+        .loading-row .loader{
+            width:36px; height:36px; border-radius:50%; margin:0 auto 12px;
+            border:3px solid var(--border); border-top-color:var(--primary);
+            animation:spin .8s linear infinite;
+        }
+        @keyframes spin{ to{ transform:rotate(360deg); } }
+        .hidden{ display:none; }
+        .err-note{ font-size:12px; color:var(--text-light); margin-top:6px; }
+    </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">القمة</span>
+    <span class="brand-word">لوحة التحكم — مِنصّة القمة</span>
+  </div>
+  <div class="topbar-actions">
+    <span id="gnavMount"></span>
+  </div>
+</header>
+
+<nav class="dash-subnav">
+  <a class="active" href="./index.html">
+    <i class="fa-solid fa-chart-line"></i>
+    نظرة عامة
+  </a>
+  <a href="../Users-List/index.html">
+    <i class="fa-solid fa-users"></i>
+    المستخدمين
+  </a>
+</nav>
+
+<div class="dash-wrap">
+  <h2 class="dash-title">نظرة عامة على المنصّة</h2>
+  <span class="dash-sub">إحصائيات مباشرة من السيرفر</span>
+
+  <div id="loadingRow" class="loading-row">
+    <div class="loader"></div>
+    جارِ تحميل الإحصائيات...
+  </div>
+
+  <div id="dashContent" class="hidden">
+    <div class="stat-grid">
+      <div class="stat-card">
+        <span class="stat-icon i1"><i class="fa-solid fa-users"></i></span>
+        <div><div class="stat-value" id="statUsers">0</div><div class="stat-label">إجمالي المستخدمين</div></div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon i2"><i class="fa-solid fa-book-open"></i></span>
+        <div><div class="stat-value" id="statLessons">0</div><div class="stat-label">إجمالي الدروس</div></div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon i3"><i class="fa-solid fa-newspaper"></i></span>
+        <div><div class="stat-value" id="statPosts">0</div><div class="stat-label">إجمالي البوستات</div></div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon i4"><i class="fa-solid fa-heart"></i></span>
+        <div><div class="stat-value" id="statLikes">0</div><div class="stat-label">إجمالي الإعجابات</div></div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon i5"><i class="fa-solid fa-comment"></i></span>
+        <div><div class="stat-value" id="statQuestions">0</div><div class="stat-label">إجمالي الأسئلة</div></div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon i6"><i class="fa-solid fa-user-lock"></i></span>
+        <div><div class="stat-value" id="statBlocked">0</div><div class="stat-label">مستخدمين محظورين</div></div>
+      </div>
+    </div>
+
+    <div class="panels">
+      <div class="panel">
+        <h3>المستخدمين حسب الصلاحية</h3>
+        <div id="roleBars"></div>
+      </div>
+      <div class="panel">
+        <h3>الدروس حسب السنة الدراسية</h3>
+        <div id="yearBars"></div>
+      </div>
+    </div>
+    <p class="err-note" id="partialNote"></p>
+  </div>
+</div>
+
+<script src="../Shared/config.js"></script>
+<script src="../Shared/nav.js"></script>
+<script src="./main.js"></script>
+</body>
+</html>

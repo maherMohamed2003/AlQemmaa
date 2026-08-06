@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تعديل بيانات المستخدم</title>
+
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <style>
+        .edit-wrap{ max-width:520px; margin:0 auto; padding:36px 20px 70px; }
+        .edit-back{
+            display:inline-flex; align-items:center; gap:6px; margin-bottom:18px;
+            font-size:13.5px; font-weight:700; color:var(--text-light); text-decoration:none;
+        }
+        .edit-back:hover{ color:var(--text); }
+        .edit-card{
+            background:var(--card); border:1px solid var(--border); border-radius:16px;
+            padding:26px 24px; box-shadow:var(--shadow);
+        }
+        .edit-card h2{ margin:0 0 4px; font-size:20px; }
+        .edit-card .sub{ color:var(--text-light); font-size:13px; margin-bottom:22px; display:block; }
+        .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+        .field label{ font-size:13px; font-weight:700; color:var(--text); }
+        .field input, .field select{
+            font-family:'Cairo', sans-serif; font-size:14px; padding:11px 14px;
+            border-radius:10px; border:1.5px solid var(--border); background:var(--bg); color:var(--text);
+            outline:none; width:100%;
+        }
+        .field input:focus, .field select:focus{ border-color:var(--primary); }
+        .field input:disabled{ opacity:.65; }
+        .field-error{ font-size:12px; color:var(--danger); min-height:14px; }
+        .save-btn{
+            width:100%; padding:13px; border:none; border-radius:10px;
+            background:var(--primary); color:#fff; font-family:'Cairo', sans-serif;
+            font-weight:700; font-size:14.5px; cursor:pointer; display:flex; align-items:center;
+            justify-content:center; gap:8px;
+        }
+        .save-btn:hover:not(:disabled){ background:var(--primary-hover); }
+        .save-btn:disabled{ opacity:.7; cursor:not-allowed; }
+        .form-msg{ font-size:13px; margin-top:12px; padding:0; max-height:0; overflow:hidden; border-radius:8px; }
+        .form-msg.show{ padding:10px 12px; max-height:60px; }
+        .form-msg.error{ background:rgba(239,68,68,.12); color:var(--danger); }
+        .form-msg.success{ background:rgba(34,197,94,.12); color:var(--success); }
+        .loading-row{ text-align:center; padding:40px 0; color:var(--text-light); }
+        .loading-row .loader{
+            width:34px; height:34px; border-radius:50%; margin:0 auto 12px;
+            border:3px solid var(--border); border-top-color:var(--primary);
+            animation:spin .8s linear infinite;
+        }
+        @keyframes spin{ to{ transform:rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">حرف</span>
+    <span class="brand-word">لوحة التحكم — منصّة حرف</span>
+  </div>
+  <div class="topbar-actions">
+    <span id="gnavMount"></span>
+  </div>
+</header>
+
+<nav class="dash-subnav">
+  <a href="../Dashboard/index.html">
+    <i class="fa-solid fa-chart-line"></i>
+    نظرة عامة
+  </a>
+  <a class="active" href="./index.html">
+    <i class="fa-solid fa-users"></i>
+    المستخدمين
+  </a>
+</nav>
+
+<div class="edit-wrap">
+  <a class="edit-back" href="./index.html">
+    <i class="fa-solid fa-arrow-right"></i>
+    رجوع لقائمة المستخدمين
+  </a>
+
+  <div class="edit-card">
+    <h2>تعديل بيانات المستخدم</h2>
+    <span class="sub" id="userSub">جارِ تحميل البيانات...</span>
+
+    <div class="loading-row" id="loadingRow">
+      <div class="loader"></div>
+      جارِ تحميل بيانات المستخدم...
+    </div>
+
+    <form id="editForm" style="display:none;">
+      <div class="field">
+        <label for="fName">الاسم</label>
+        <input type="text" id="fName" placeholder="اسم المستخدم">
+        <span class="field-error" id="nameError"></span>
+      </div>
+
+      <div class="field">
+        <label for="fYear">الصف الدراسي</label>
+        <select id="fYear">
+          <option value="1">الصف الأول الإعدادي</option>
+          <option value="2">الصف الثاني الإعدادي</option>
+          <option value="3">الصف الثالث الإعدادي</option>
+          <option value="4">الصف الأول الثانوي</option>
+          <option value="5">الصف الثاني الثانوي</option>
+          <option value="6">الصف الثالث الثانوي</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="fPhone">رقم الهاتف</label>
+        <input type="tel" id="fPhone" placeholder="01xxxxxxxxx">
+        <span class="field-error" id="phoneError"></span>
+      </div>
+
+      <button type="submit" class="save-btn" id="saveBtn">
+        <i class="fa-solid fa-floppy-disk"></i>
+        حفظ التعديلات
+      </button>
+
+      <div class="form-msg" id="formMsg"></div>
+    </form>
+  </div>
+</div>
+
+<script src="../Shared/config.js"></script>
+<script src="../Shared/nav.js"></script>
+<script src="./edit-user.js"></script>
+</body>
+</html>
