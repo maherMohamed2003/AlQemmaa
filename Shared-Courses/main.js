@@ -442,7 +442,7 @@ async function SaveCourse() {
   }
   const title = editForm.Title.value.trim();
   const description = editForm.Description.value.trim();
-  const videoUrl = editForm.videoLink.value.trim();
+  const videoUrl = editForm.videoUrl.value.trim();
 
   const isEditing = !!currentCourseId;
 
