@@ -154,7 +154,7 @@ form.addEventListener("submit", async (e) => {
       }
       setMessage("success", "تم إنشاء حسابك بنجاح، جارِ تحويلك...");
       setTimeout(() => {
-        window.location.href = "../Lessons-List/lessons.html";
+        window.location.href = "../Home/home.html";
       }, 1200);
     } else {
       const msg =
