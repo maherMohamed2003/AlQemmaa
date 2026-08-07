@@ -19,21 +19,31 @@ const editForm = document.querySelector("#editModal form");
 // ===============================
 
 // يحوّل روابط المشاركة الشائعة (يوتيوب، فيميو) إلى رابط تضمين (Embed) صالح للـ iframe.
+// ملاحظة: بنضيف fs=0 عشان نمنع اليوتيوب من الدخول في وضع Fullscreen خالص،
+// وده بيمنع ظهور الـ menu اللي بيظهر جوه اليوتيوب في وضع الفول سكرين
+// (زر Fullscreen بيختفي تمامًا من الكونترولز عشان اليوزر ميقدرش يدخل الوضع ده أصلاً).
 function toEmbedUrl(url) {
   try {
     const u = new URL(url);
 
     if (u.hostname.includes("youtu.be")) {
       const id = u.pathname.replace("/", "");
-      return `https://www.youtube.com/embed/${id}?controls=1`;
+      return `https://www.youtube.com/embed/${id}?controls=1&fs=0&rel=0&modestbranding=1`;
     }
 
     if (u.hostname.includes("youtube.com")) {
       if (u.pathname === "/watch" && u.searchParams.get("v")) {
         const id = u.searchParams.get("v");
-        return `https://www.youtube.com/embed/${id}?controls=1`;
+        return `https://www.youtube.com/embed/${id}?controls=1&fs=0&rel=0&modestbranding=1`;
       }
-      if (u.pathname.startsWith("/embed/")) return url;
+      if (u.pathname.startsWith("/embed/")) {
+        // نضمن وجود نفس الباراميترات حتى لو الرابط جاي أصلاً بصيغة embed
+        u.searchParams.set("fs", "0");
+        u.searchParams.set("rel", "0");
+        u.searchParams.set("modestbranding", "1");
+        if (!u.searchParams.has("controls")) u.searchParams.set("controls", "1");
+        return u.toString();
+      }
     }
 
     if (u.hostname.includes("vimeo.com") && !u.hostname.includes("player")) {
@@ -283,7 +293,7 @@ function OpenVideoModal(id) {
 
   const player = document.getElementById("videoModalPlayer");
 
-  // تم إرجاع الكونترولز ليوتيوب هنا
+  // تم إرجاع الكونترولز ليوتيوب هنا (وبدون زر Fullscreen بسبب fs=0 في toEmbedUrl)
   player.src = toEmbedUrl(course.videoLink);
 
   document.getElementById("videoModalTitle").textContent = course.title;
