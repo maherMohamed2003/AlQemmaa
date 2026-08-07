@@ -445,8 +445,8 @@ function wireVideoModalProtection() {
   const wmText = currentUser
     ? `${currentUser.name || ""} • ${currentUser.email || currentUser.id}`
     : "";
-  if (watermark) watermark.textContent = wmText;
-  if (watermarkFloat) watermarkFloat.textContent = wmText;
+  if (watermark) watermark.textContent = "أ. عبدالرحمن مهني";
+  if (watermarkFloat) watermarkFloat.textContent = "أ. عبدالرحمن مهني";
 
   if (videoModalProtectionWired) return;
   videoModalProtectionWired = true;
