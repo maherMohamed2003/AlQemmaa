@@ -26,19 +26,22 @@ function toEmbedUrl(url) {
 
     if (u.hostname.includes("youtu.be")) {
       const id = u.pathname.replace("/", "");
-      return `https://www.youtube.com/embed/${id}?controls=0`;
+      // رجعنا controls=1 عشان يوتيوب يظهر الكونترولز تاني
+      return `https://www.youtube.com/embed/${id}?controls=1`;
     }
 
     if (u.hostname.includes("youtube.com")) {
       if (u.pathname === "/watch" && u.searchParams.get("v")) {
-        return `https://www.youtube.com/embed/${u.searchParams.get("v")}?controls=0`;
+        const id = u.searchParams.get("v");
+        // رجعنا controls=1
+        return `https://www.youtube.com/embed/${id}?controls=1`;
       }
       if (u.pathname.startsWith("/embed/")) return url;
     }
 
     if (u.hostname.includes("vimeo.com") && !u.hostname.includes("player")) {
       const id = u.pathname.split("/").filter(Boolean).pop();
-      if (id && /^\d+$/.test(id)) return `https://player.vimeo.com/video/${id}?controls=0`;
+      if (id && /^\d+$/.test(id)) return `https://player.vimeo.com/video/${id}?controls=1`;
     }
 
     return url;
@@ -298,6 +301,7 @@ function OpenVideoModal(id) {
 
   const player = document.getElementById("videoModalPlayer");
 
+  // تم إرجاع الكونترولز ليوتيوب هنا
   player.src = toEmbedUrl(course.videoLink);
 
   document.getElementById("videoModalTitle").textContent = course.title;
@@ -319,12 +323,10 @@ function CloseVideoModal() {
 }
 
 // ===============================
-// حماية فيديو الكورس المشترك (أفضل ما يمكن عمله من واجهة الموقع فقط)
+// حماية فيديو الكورس المشترك 
 // ===============================
 let videoModalProtectionWired = false;
 function wireVideoModalProtection() {
-  // تم حذف السطر الذي كان يبحث عن fullscreen-action-menu لأنه لا يوجد في صفحتك ويسبب توقف الكود
-  
   const box = document.getElementById("videoModalBox");
   const player = document.getElementById("videoModalPlayer");
   const watermark = document.getElementById("videoModalWatermark");
@@ -337,7 +339,7 @@ function wireVideoModalProtection() {
   if (watermark) watermark.textContent = wmText;
   if (watermarkFloat) watermarkFloat.textContent = wmText;
 
-  if (videoModalProtectionWired) return; // نضيف الـ event listeners مرة واحدة بس
+  if (videoModalProtectionWired) return;
   videoModalProtectionWired = true;
 
   box.addEventListener("contextmenu", (e) => e.preventDefault());
@@ -353,7 +355,6 @@ function wireVideoModalProtection() {
     if (blockCombo || blockDevTools) e.preventDefault();
   });
 
-  // كشف تقريبي لفتح أدوات المطورين — رادع إضافي، مش مضمون 100%
   const DEVTOOLS_THRESHOLD = 170;
   let devtoolsOpen = false;
   setInterval(() => {
@@ -367,6 +368,29 @@ function wireVideoModalProtection() {
       box.classList.toggle("dev-blur", devtoolsOpen);
     }
   }, 1000);
+
+  // ====== هنا كود إخفاء الـ div اللي واخد كلاس fullscreen-action-menu ======
+  // ننتظر ثانية لحد ما يوتيوب يحمل العنصر جوة الـ iframe، ثم نخفيه
+  setTimeout(() => {
+    try {
+      // الوصول لجوه الـ iframe
+      const iframeDoc = player.contentDocument || player.contentWindow?.document;
+      if (iframeDoc) {
+        // البحث عن العنصر بالكلاس
+        const elements = iframeDoc.getElementsByClassName("fullscreen-action-menu");
+        if (elements.length > 0) {
+          // إخفاء العنصر الأول
+          elements[0].style.display = "none";
+          console.log("✅ تم إخفاء fullscreen-action-menu بنجاح");
+        } else {
+          console.log("⚠️ لم يتم العثور على fullscreen-action-menu جوة الـ iframe");
+        }
+      }
+    } catch (e) {
+      // في حالة وجود خطأ CORS أو عدم القدرة على الوصول، يتم تجاهل الخطأ
+      console.log("🔒 لا يمكن الوصول لجوه الـ iframe بسبب سياسات الأمان (CORS)");
+    }
+  }, 1000); // تأخير 1000 مللي ثانية
 }
 
 function OpenAddModal() {
