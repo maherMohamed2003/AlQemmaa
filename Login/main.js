@@ -105,7 +105,7 @@
         }
         setMessage('success', 'تم تسجيل الدخول بنجاح، جارِ تحويلك...');
         setTimeout(() => {
-          window.location.href = '../Lessons-List/lessons.html';
+          window.location.href = '../Home/home.html';
         }, 1200);
       } else {
         const msg = (data && (data.message || data.title || data.error)) || 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
