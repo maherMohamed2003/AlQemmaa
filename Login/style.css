@@ -404,6 +404,11 @@
   .signup-hint a:hover{ text-decoration:underline; }
 
   @media (max-width: 900px){
+      body{
+        align-items:flex-start;
+        padding-top:20px;
+        padding-bottom:20px;
+    }
     .stage{ grid-template-columns:1fr; }
     .showcase{ padding:34px 24px 30px; }
     .frame{ width:150px; height:170px; margin-bottom:14px; }
