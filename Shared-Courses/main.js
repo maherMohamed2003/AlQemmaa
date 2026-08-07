@@ -26,19 +26,19 @@ function toEmbedUrl(url) {
 
     if (u.hostname.includes("youtu.be")) {
       const id = u.pathname.replace("/", "");
-      return `https://www.youtube.com/embed/${id}`;
+      return `https://www.youtube.com/embed/${id}?controls=0`;
     }
 
     if (u.hostname.includes("youtube.com")) {
       if (u.pathname === "/watch" && u.searchParams.get("v")) {
-        return `https://www.youtube.com/embed/${u.searchParams.get("v")}`;
+        return `https://www.youtube.com/embed/${u.searchParams.get("v")}?controls=0`;
       }
       if (u.pathname.startsWith("/embed/")) return url;
     }
 
     if (u.hostname.includes("vimeo.com") && !u.hostname.includes("player")) {
       const id = u.pathname.split("/").filter(Boolean).pop();
-      if (id && /^\d+$/.test(id)) return `https://player.vimeo.com/video/${id}`;
+      if (id && /^\d+$/.test(id)) return `https://player.vimeo.com/video/${id}?controls=0`;
     }
 
     return url;
