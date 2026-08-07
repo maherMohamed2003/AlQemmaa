@@ -313,7 +313,6 @@ function OpenVideoModal(id) {
   
   wireVideoModalProtection();
   ensureVideoOverlayBar();
-  loadYouTubeApi(attachYtPlayer);
 }
 
 // ===============================
@@ -359,62 +358,12 @@ function ensureVideoOverlayBar() {
 function CloseVideoModal() {
   const player = document.getElementById("videoModalPlayer");
 
-  if (ytPlayerInstance && typeof ytPlayerInstance.destroy === "function") {
-    ytPlayerInstance.destroy();
-  }
-  ytPlayerInstance = null;
+  // الشريط بيختفي بس هنا - وقت ما تقفل صفحة الدرس
+  const bar = document.getElementById("videoModalHideBar");
+  if (bar) bar.style.display = "none";
 
   player.src = "";
   videoModal.style.display = "none";
-}
-
-// ===============================
-// YouTube IFrame Player API
-// بنستخدمها بس عشان نعرف لما الفيديو "يبدأ التشغيل" فعليًا
-// (postMessage رسمي من يوتيوب، مش وصول مباشر لعناصر الـ iframe)
-// ===============================
-let ytPlayerInstance = null;
-
-function loadYouTubeApi(callback) {
-  if (window.YT && window.YT.Player) {
-    callback();
-    return;
-  }
-
-  if (!document.getElementById("youtube-iframe-api")) {
-    const tag = document.createElement("script");
-    tag.id = "youtube-iframe-api";
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.head.appendChild(tag);
-  }
-
-  const prevReady = window.onYouTubeIframeAPIReady;
-  window.onYouTubeIframeAPIReady = function () {
-    if (typeof prevReady === "function") prevReady();
-    callback();
-  };
-}
-
-function attachYtPlayer() {
-  const player = document.getElementById("videoModalPlayer");
-  if (!player || !player.src.includes("youtube.com/embed")) return;
-
-  if (ytPlayerInstance && typeof ytPlayerInstance.destroy === "function") {
-    ytPlayerInstance.destroy();
-    ytPlayerInstance = null;
-  }
-
-  ytPlayerInstance = new YT.Player("videoModalPlayer", {
-    events: {
-      onStateChange: function (e) {
-        // 1 = PLAYING
-        if (e.data === 1) {
-          const bar = document.getElementById("videoModalHideBar");
-          if (bar) bar.style.display = "none";
-        }
-      },
-    },
-  });
 }
 
 // ===============================
