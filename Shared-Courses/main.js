@@ -310,7 +310,6 @@ function OpenVideoModal(id) {
   videoModal.style.display = "flex";
   
   wireVideoModalProtection();
-document.getElementsByClassName("fullscreen-action-menu")[0].style.display = "none";
 }
 
 function CloseVideoModal() {
@@ -324,6 +323,7 @@ function CloseVideoModal() {
 // ===============================
 let videoModalProtectionWired = false;
 function wireVideoModalProtection() {
+document.getElementsByClassName("fullscreen-action-menu")[0].style.display = "none";
   const box = document.getElementById("videoModalBox");
   const player = document.getElementById("videoModalPlayer");
   const watermark = document.getElementById("videoModalWatermark");
