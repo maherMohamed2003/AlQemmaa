@@ -306,6 +306,46 @@ function OpenVideoModal(id) {
   videoModal.style.display = "flex";
   
   wireVideoModalProtection();
+  ensureVideoOverlayBar();
+}
+
+// ===============================
+// شريط تغطية فوق منطقة معيّنة من الـ iframe (تحت بار الوقت)
+// بما إننا مش قادرين نلمس أي حاجة جوه iframe اليوتيوب (Cross-Origin)،
+// الحل الوحيد إننا نحط عنصر فوقه من برّه يغطي البيكسلات دي بالكامل.
+// ===============================
+function ensureVideoOverlayBar() {
+  const player = document.getElementById("videoModalPlayer");
+  if (!player) return;
+
+  // نلف الـ iframe بـ wrapper مرة واحدة بس (عشان نقدر نحط الشريط فوقه بالظبط)
+  let wrapper = player.parentElement;
+  if (!wrapper.classList.contains("video-player-wrap")) {
+    wrapper = document.createElement("div");
+    wrapper.className = "video-player-wrap";
+    wrapper.style.position = "relative";
+    wrapper.style.width = "100%";
+    wrapper.style.height = "100%";
+    player.parentNode.insertBefore(wrapper, player);
+    wrapper.appendChild(player);
+  }
+
+  let bar = document.getElementById("videoModalHideBar");
+  if (!bar) {
+    bar = document.createElement("div");
+    bar.id = "videoModalHideBar";
+    wrapper.appendChild(bar);
+  }
+
+  // ====== عدّل القيم دي لحد ما الشريط يظبط بالظبط على المنطقة المطلوبة ======
+  bar.style.position = "absolute";
+  bar.style.left = "0";
+  bar.style.right = "0";
+  bar.style.bottom = "0";       // المسافة من تحت الـ iframe (لو عايز تبعده عن الحافة زوّد الرقم)
+  bar.style.height = "46px";    // ارتفاع الشريط - ده اللي هيحدد قد إيه هيغطي
+  bar.style.background = "red"; // لون مؤقت للتجربة، غيّره بعدين ليطابق خلفية البلاير
+  bar.style.zIndex = "5";
+  bar.style.pointerEvents = "none"; // خليها "auto" لو عايز كمان تمنع الضغط على المنطقة دي
 }
 
 function CloseVideoModal() {
