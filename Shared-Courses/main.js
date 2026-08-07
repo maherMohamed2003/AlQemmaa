@@ -26,21 +26,27 @@ function toEmbedUrl(url) {
   try {
     const u = new URL(url);
 
+    // enablejsapi=1 و origin مطلوبين عشان نقدر نستخدم YouTube IFrame Player API
+    // ونسمع لحدث "بدأ التشغيل" عشان نخفي الشريط وقتها
+    const jsApiOrigin = encodeURIComponent(window.location.origin);
+
     if (u.hostname.includes("youtu.be")) {
       const id = u.pathname.replace("/", "");
-      return `https://www.youtube.com/embed/${id}?controls=1&fs=0&rel=0&modestbranding=1`;
+      return `https://www.youtube.com/embed/${id}?controls=1&fs=0&rel=0&modestbranding=1&enablejsapi=1&origin=${jsApiOrigin}`;
     }
 
     if (u.hostname.includes("youtube.com")) {
       if (u.pathname === "/watch" && u.searchParams.get("v")) {
         const id = u.searchParams.get("v");
-        return `https://www.youtube.com/embed/${id}?controls=1&fs=0&rel=0&modestbranding=1`;
+        return `https://www.youtube.com/embed/${id}?controls=1&fs=0&rel=0&modestbranding=1&enablejsapi=1&origin=${jsApiOrigin}`;
       }
       if (u.pathname.startsWith("/embed/")) {
         // نضمن وجود نفس الباراميترات حتى لو الرابط جاي أصلاً بصيغة embed
         u.searchParams.set("fs", "0");
         u.searchParams.set("rel", "0");
         u.searchParams.set("modestbranding", "1");
+        u.searchParams.set("enablejsapi", "1");
+        u.searchParams.set("origin", window.location.origin);
         if (!u.searchParams.has("controls")) u.searchParams.set("controls", "1");
         return u.toString();
       }
@@ -307,6 +313,7 @@ function OpenVideoModal(id) {
   
   wireVideoModalProtection();
   ensureVideoOverlayBar();
+  loadYouTubeApi(attachYtPlayer);
 }
 
 // ===============================
@@ -346,12 +353,68 @@ function ensureVideoOverlayBar() {
   bar.style.background = "red"; // لون مؤقت للتجربة، غيّره بعدين ليطابق خلفية البلاير
   bar.style.zIndex = "5";
   bar.style.pointerEvents = "none"; // خليها "auto" لو عايز كمان تمنع الضغط على المنطقة دي
+  bar.style.display = "block"; // نتأكد إنه ظاهر تاني كل ما نفتح فيديو جديد
 }
 
 function CloseVideoModal() {
   const player = document.getElementById("videoModalPlayer");
+
+  if (ytPlayerInstance && typeof ytPlayerInstance.destroy === "function") {
+    ytPlayerInstance.destroy();
+  }
+  ytPlayerInstance = null;
+
   player.src = "";
   videoModal.style.display = "none";
+}
+
+// ===============================
+// YouTube IFrame Player API
+// بنستخدمها بس عشان نعرف لما الفيديو "يبدأ التشغيل" فعليًا
+// (postMessage رسمي من يوتيوب، مش وصول مباشر لعناصر الـ iframe)
+// ===============================
+let ytPlayerInstance = null;
+
+function loadYouTubeApi(callback) {
+  if (window.YT && window.YT.Player) {
+    callback();
+    return;
+  }
+
+  if (!document.getElementById("youtube-iframe-api")) {
+    const tag = document.createElement("script");
+    tag.id = "youtube-iframe-api";
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+  }
+
+  const prevReady = window.onYouTubeIframeAPIReady;
+  window.onYouTubeIframeAPIReady = function () {
+    if (typeof prevReady === "function") prevReady();
+    callback();
+  };
+}
+
+function attachYtPlayer() {
+  const player = document.getElementById("videoModalPlayer");
+  if (!player || !player.src.includes("youtube.com/embed")) return;
+
+  if (ytPlayerInstance && typeof ytPlayerInstance.destroy === "function") {
+    ytPlayerInstance.destroy();
+    ytPlayerInstance = null;
+  }
+
+  ytPlayerInstance = new YT.Player("videoModalPlayer", {
+    events: {
+      onStateChange: function (e) {
+        // 1 = PLAYING
+        if (e.data === 1) {
+          const bar = document.getElementById("videoModalHideBar");
+          if (bar) bar.style.display = "none";
+        }
+      },
+    },
+  });
 }
 
 // ===============================
