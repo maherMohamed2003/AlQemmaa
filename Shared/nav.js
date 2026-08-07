@@ -14,7 +14,7 @@
   const PING_INTERVAL_MS = 60 * 1000; // دقيقة واحدة
 
   const LINKS = [
-    { key: "home", href: "../Home/home.html", label: "الرئيسية", staff: false },
+    { key: "home", href: "../Home/home.html", label: "الرئيسة", staff: false },
     {
       key: "lessons",
       href: "../Lessons-List/lessons.html",
@@ -26,12 +26,6 @@
       href: "../Shared-Courses/shared-courses.html",
       label: " الفيديوهات المفتوحة",
       staff: false,
-    },
-    {
-      key: "addLesson",
-      href: "../Add New Lesson/index.html",
-      label: "إضافة درس",
-      staff: true,
     },
     {
       key: "addPost",
