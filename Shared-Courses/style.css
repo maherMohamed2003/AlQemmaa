@@ -14,7 +14,8 @@
     --danger-soft:rgba(162,59,59,0.12);
   }
   /* dark mode: automatic (OS preference) + manual override via the checkbox below (no JS) */
- 
+ .fullscreen-action-menu{
+     display = none;}
   .dark{
     --bg:#10171A;
     --bg-soft:#151E21;
