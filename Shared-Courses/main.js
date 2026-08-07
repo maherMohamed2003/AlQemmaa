@@ -3,6 +3,9 @@ const SERVER_ROOT =
   (window.APP_CONFIG && window.APP_CONFIG.ROOT) ||
   "https://abdomahne.runasp.net";
 
+// عدّل المسار ده لو صفحة الهوم عندك في مكان مختلف
+const HOME_URL = "../Home/home.html";
+
 let courses = [];
 let currentCourseId = null;
 let deleteCourseId = null;
@@ -324,7 +327,7 @@ function ensureVideoOverlayBar() {
   const player = document.getElementById("videoModalPlayer");
   if (!player) return;
 
-  // نلف الـ iframe بـ wrapper مرة واحدة بس (عشان نقدر نحط الشريط فوقه بالظبط)
+  // نلف الـ iframe بـ wrapper مرة واحدة بس (عشان نقدر نحط الشريط والزرار فوقه بالظبط)
   let wrapper = player.parentElement;
   if (!wrapper.classList.contains("video-player-wrap")) {
     wrapper = document.createElement("div");
@@ -347,12 +350,74 @@ function ensureVideoOverlayBar() {
   bar.style.position = "absolute";
   bar.style.left = "0";
   bar.style.right = "0";
-  bar.style.bottom = "0";       // المسافة من تحت الـ iframe (لو عايز تبعده عن الحافة زوّد الرقم)
-  bar.style.height = "46px";    // ارتفاع الشريط - ده اللي هيحدد قد إيه هيغطي
-  bar.style.background = "red"; // لون مؤقت للتجربة، غيّره بعدين ليطابق خلفية البلاير
+  bar.style.bottom = "0";        // المسافة من تحت الـ iframe (لو عايز تبعده عن الحافة زوّد الرقم)
+  bar.style.height = "63px";     // ارتفاع الشريط
+  bar.style.background = "#1a2528";
   bar.style.zIndex = "5";
-  bar.style.pointerEvents = "none"; // خليها "auto" لو عايز كمان تمنع الضغط على المنطقة دي
-  bar.style.display = "block"; // نتأكد إنه ظاهر تاني كل ما نفتح فيديو جديد
+  bar.style.cursor = "pointer";
+  bar.style.pointerEvents = "auto"; // "auto" عشان الضغط عليه يشتغل
+  bar.style.display = "block";      // نتأكد إنه ظاهر تاني كل ما نفتح فيديو جديد
+
+  // الضغط على الشريط يودي للهوم
+  bar.onclick = () => {
+    window.location.href = HOME_URL;
+  };
+
+  ensureFullscreenButton(wrapper);
+}
+
+// ===============================
+// زرار تكبير الفيديو (بديل مخصّص لزرار اليوتيوب الأصلي اللي اتقفل بـ fs=0)
+// بيستخدم Fullscreen API على الـ wrapper نفسه من برّه، مش على الـ iframe مباشرة،
+// فمن وجهة نظر يوتيوب هو مش في وضع Fullscreen خالص - فمشكلة الـ menu متترجعش.
+// ===============================
+function ensureFullscreenButton(wrapper) {
+  let btn = document.getElementById("videoModalFullscreenBtn");
+  if (!btn) {
+    btn = document.createElement("button");
+    btn.id = "videoModalFullscreenBtn";
+    btn.type = "button";
+    btn.title = "تكبير الفيديو";
+    btn.innerHTML =
+      '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/></svg>';
+
+    btn.style.position = "absolute";
+    btn.style.bottom = "73px"; // فوق الشريط بمسافة بسيطة
+    btn.style.left = "10px";
+    btn.style.width = "38px";
+    btn.style.height = "38px";
+    btn.style.display = "flex";
+    btn.style.alignItems = "center";
+    btn.style.justifyContent = "center";
+    btn.style.background = "rgba(0,0,0,0.55)";
+    btn.style.border = "none";
+    btn.style.borderRadius = "8px";
+    btn.style.cursor = "pointer";
+    btn.style.zIndex = "6";
+
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      ToggleVideoFullscreen();
+    });
+
+    wrapper.appendChild(btn);
+  }
+}
+
+function ToggleVideoFullscreen() {
+  const wrapper = document.querySelector(".video-player-wrap");
+  if (!wrapper) return;
+
+  const isFullscreen =
+    document.fullscreenElement || document.webkitFullscreenElement;
+
+  if (!isFullscreen) {
+    if (wrapper.requestFullscreen) wrapper.requestFullscreen();
+    else if (wrapper.webkitRequestFullscreen) wrapper.webkitRequestFullscreen();
+  } else {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+  }
 }
 
 function CloseVideoModal() {
