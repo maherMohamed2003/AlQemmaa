@@ -308,7 +308,7 @@ function OpenVideoModal(id) {
     "بواسطة: " + (course.userName || "-");
 
   videoModal.style.display = "flex";
-
+document.getElementsByClassName("fullscreen-action-menu")[0].style.display = "none";
   wireVideoModalProtection();
 }
 
