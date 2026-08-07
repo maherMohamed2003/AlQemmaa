@@ -397,7 +397,7 @@ function OpenEditModal(id) {
   editForm.Id.value = course.id;
   editForm.Title.value = course.title;
   editForm.Description.value = course.description || "";
-  editForm.videoLink.value = course.videoLink || "";
+  editForm.VideoUrl.value = course.videoLink || "";
 
   document.getElementById("editModalTitle").textContent = "تعديل الكورس";
 
@@ -442,7 +442,7 @@ async function SaveCourse() {
   }
   const title = editForm.Title.value.trim();
   const description = editForm.Description.value.trim();
-  const videoUrl = editForm.videoUrl.value.trim();
+  const videoLink = editForm.VideoUrl.value.trim();
 
   const isEditing = !!currentCourseId;
 
@@ -451,13 +451,13 @@ async function SaveCourse() {
     return;
   }
 
-  if (!videoUrl) {
+  if (!videoLink) {
     showToast("من فضلك أدخل رابط فيديو الكورس.", "warning");
     return;
   }
 
   try {
-    new URL(videoUrl);
+    new URL(videoLink);
   } catch {
     showToast("رابط الفيديو غير صالح.", "warning");
     return;
@@ -481,7 +481,7 @@ async function SaveCourse() {
           id: currentCourseId,
           title,
           description,
-          videoUrl,
+          videoLink,
         }),
       });
 
@@ -508,7 +508,7 @@ async function SaveCourse() {
         title,
         description,
         userId: currentUser.id,
-        videoLink: videoUrl,
+        videoLink,
       }),
     });
 
