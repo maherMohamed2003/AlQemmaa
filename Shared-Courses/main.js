@@ -19,21 +19,18 @@ const editForm = document.querySelector("#editModal form");
 // ===============================
 
 // يحوّل روابط المشاركة الشائعة (يوتيوب، فيميو) إلى رابط تضمين (Embed) صالح للـ iframe.
-// أي رابط آخر بيترجع زي ما هو.
 function toEmbedUrl(url) {
   try {
     const u = new URL(url);
 
     if (u.hostname.includes("youtu.be")) {
       const id = u.pathname.replace("/", "");
-      // رجعنا controls=1 عشان يوتيوب يظهر الكونترولز تاني
       return `https://www.youtube.com/embed/${id}?controls=1`;
     }
 
     if (u.hostname.includes("youtube.com")) {
       if (u.pathname === "/watch" && u.searchParams.get("v")) {
         const id = u.searchParams.get("v");
-        // رجعنا controls=1
         return `https://www.youtube.com/embed/${id}?controls=1`;
       }
       if (u.pathname.startsWith("/embed/")) return url;
@@ -76,13 +73,8 @@ function getVideoThumbnail(url) {
   }
 }
 
-// أسماء الرولات المسموح لها بإضافة/تعديل/حذف الكورسات المشتركة
 const STAFF_ROLES = ["معلم", "مبرمج"];
 
-// ملحوظة: التحقق ده بيتحكم بس في إظهار/إخفاء الأزرار في الواجهة (UX)،
-// ومش بديل عن التحقق الحقيقي في السيرفر. لازم كل Endpoint (إضافة/تعديل/حذف
-// كورس مشترك) يتحقق برضو من الرول بتاع التوكن قبل التنفيذ، عشان أي حد
-// يقدر يستدعي الـ API مباشرة (Postman مثلاً) من غير الواجهة.
 function isStaff() {
   try {
     if (
@@ -131,16 +123,6 @@ const TOAST_TITLES = {
   info: "معلومة",
 };
 
-/**
- * يعرض تنبيه (توست) أنيق بدل alert().
- * @param {string} message نص الرسالة
- * @param {"success"|"error"|"warning"|"info"} type نوع التنبيه
- * @param {object} [opts]
- * @param {string} [opts.title] عنوان مخصص للتنبيه
- * @param {number} [opts.duration] مدة العرض بالميلي ثانية (0 = بدون إخفاء تلقائي)
- * @param {boolean} [opts.progress] عرض شريط تقدّم للرفع (بيتحدث عن طريق الكائن المرجّع)
- * @returns {{update:(pct:number)=>void, close:()=>void}}
- */
 function showToast(message, type = "info", opts = {}) {
   if (!toastContainer) return { update: () => {}, close: () => {} };
 
@@ -368,29 +350,6 @@ function wireVideoModalProtection() {
       box.classList.toggle("dev-blur", devtoolsOpen);
     }
   }, 1000);
-
-  // ====== هنا كود إخفاء الـ div اللي واخد كلاس fullscreen-action-menu ======
-  // ننتظر ثانية لحد ما يوتيوب يحمل العنصر جوة الـ iframe، ثم نخفيه
-  setTimeout(() => {
-    try {
-      // الوصول لجوه الـ iframe
-      const iframeDoc = player.contentDocument || player.contentWindow?.document;
-      if (iframeDoc) {
-        // البحث عن العنصر بالكلاس
-        const elements = iframeDoc.getElementsByClassName("fullscreen-action-menu");
-        if (elements.length > 0) {
-          // إخفاء العنصر الأول
-          elements[0].style.display = "none";
-          console.log("✅ تم إخفاء fullscreen-action-menu بنجاح");
-        } else {
-          console.log("⚠️ لم يتم العثور على fullscreen-action-menu جوة الـ iframe");
-        }
-      }
-    } catch (e) {
-      // في حالة وجود خطأ CORS أو عدم القدرة على الوصول، يتم تجاهل الخطأ
-      console.log("🔒 لا يمكن الوصول لجوه الـ iframe بسبب سياسات الأمان (CORS)");
-    }
-  }, 1000); // تأخير 1000 مللي ثانية
 }
 
 function OpenAddModal() {
