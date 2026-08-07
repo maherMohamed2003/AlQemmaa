@@ -334,7 +334,6 @@ function wireVideoModalProtection() {
     : "";
   if (watermark) watermark.textContent = wmText;
   if (watermarkFloat) watermarkFloat.textContent = wmText;
-document.getElementsByClassName("fullscreen-action-menu")[0].style.display = "none";
 
   if (videoModalProtectionWired) return; // نضيف الـ event listeners مرة واحدة بس
   videoModalProtectionWired = true;
