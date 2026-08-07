@@ -15,7 +15,7 @@
   }
   /* dark mode: automatic (OS preference) + manual override via the checkbox below (no JS) */
  .fullscreen-action-menu{
-     display = none;}
+     display : none;}
   .dark{
     --bg:#10171A;
     --bg-soft:#151E21;
