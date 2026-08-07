@@ -323,6 +323,8 @@ function CloseVideoModal() {
 // ===============================
 let videoModalProtectionWired = false;
 function wireVideoModalProtection() {
+  // تم حذف السطر الذي كان يبحث عن fullscreen-action-menu لأنه لا يوجد في صفحتك ويسبب توقف الكود
+  
   const box = document.getElementById("videoModalBox");
   const player = document.getElementById("videoModalPlayer");
   const watermark = document.getElementById("videoModalWatermark");
