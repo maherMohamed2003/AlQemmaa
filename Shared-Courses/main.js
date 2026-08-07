@@ -323,7 +323,6 @@ function CloseVideoModal() {
 // ===============================
 let videoModalProtectionWired = false;
 function wireVideoModalProtection() {
-document.getElementsByClassName("fullscreen-action-menu")[0].style.display = "none";
   const box = document.getElementById("videoModalBox");
   const player = document.getElementById("videoModalPlayer");
   const watermark = document.getElementById("videoModalWatermark");
@@ -335,6 +334,7 @@ document.getElementsByClassName("fullscreen-action-menu")[0].style.display = "no
     : "";
   if (watermark) watermark.textContent = wmText;
   if (watermarkFloat) watermarkFloat.textContent = wmText;
+document.getElementsByClassName("fullscreen-action-menu")[0].style.display = "none";
 
   if (videoModalProtectionWired) return; // نضيف الـ event listeners مرة واحدة بس
   videoModalProtectionWired = true;
