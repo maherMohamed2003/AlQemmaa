@@ -14,8 +14,20 @@
     --danger-soft:rgba(162,59,59,0.12);
   }
   /* dark mode: automatic (OS preference) + manual override via the checkbox below (no JS) */
- .fullscreen-action-menu{
-     display : none;}
+/* ========== إخفاء قائمة ملء الشاشة الخاصة بيوتيوب ========== */
+/* نخفي العنصر الرئيسي الذي يحتوي على القائمة في ملء الشاشة */
+ytm-player-fullscreen-controls-host {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* تأمين إضافي: إخفاء الكلاس المحدد في الصورة مباشرة */
+ytm-player-fullscreen-action-menu-host .fullscreen-action-menu {
+    display: none !important;
+    visibility: hidden !important;
+}
   .dark{
     --bg:#10171A;
     --bg-soft:#151E21;
