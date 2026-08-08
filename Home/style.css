@@ -193,6 +193,7 @@
     background:var(--panel);
     border:1px solid var(--line);
     border-radius:18px;
+   overflow:hidden;
     padding:20px 20px 14px;
     margin-bottom:16px;
     box-shadow:var(--shadow);
@@ -423,3 +424,22 @@
   }
   .qa-del:hover{ background:rgba(162,59,59,0.12); color:var(--danger); }
   .qa-del svg{ width:14px; height:14px; }
+.post-content{
+  font-size:15px; line-height:1.9; color:var(--ink);
+  margin:0 0 14px;
+  white-space:pre-wrap;
+  overflow-wrap:break-word;
+  word-break:break-word;
+}
+.post-content .post-link{
+  color:var(--teal); font-weight:700; text-decoration:underline;
+  text-underline-offset:2px;
+  word-break:break-all;
+  overflow-wrap:anywhere;
+  unicode-bidi:plaintext;
+  direction:ltr;
+  display:inline-block;
+  max-width:100%;
+  vertical-align:top;
+}
+.post-content .post-link:hover{ color:var(--teal-deep); }
