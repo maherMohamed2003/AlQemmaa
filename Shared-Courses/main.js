@@ -487,19 +487,23 @@ function wireVideoModalProtection() {
     if (blockCombo || blockDevTools) e.preventDefault();
   });
 
-  const DEVTOOLS_THRESHOLD = 170;
-  let devtoolsOpen = false;
-  setInterval(() => {
-    if (videoModal.style.display !== "flex") return;
-    const widthDiff = window.outerWidth - window.innerWidth;
-    const heightDiff = window.outerHeight - window.innerHeight;
-    const isOpen =
-      widthDiff > DEVTOOLS_THRESHOLD || heightDiff > DEVTOOLS_THRESHOLD;
-    if (isOpen !== devtoolsOpen) {
-      devtoolsOpen = isOpen;
-      box.classList.toggle("dev-blur", devtoolsOpen);
-    }
-  }, 1000);
+  // ==========================================================
+  // اتعمل تعطيل مؤقت لكشف فتح أدوات المطورين (dev-blur) — الكود اتسيب هنا
+  // كومنت عشان يترجع تاني بسهولة وقت ما تحتاجه.
+  // ==========================================================
+  // const DEVTOOLS_THRESHOLD = 170;
+  // let devtoolsOpen = false;
+  // setInterval(() => {
+  //   if (videoModal.style.display !== "flex") return;
+  //   const widthDiff = window.outerWidth - window.innerWidth;
+  //   const heightDiff = window.outerHeight - window.innerHeight;
+  //   const isOpen =
+  //     widthDiff > DEVTOOLS_THRESHOLD || heightDiff > DEVTOOLS_THRESHOLD;
+  //   if (isOpen !== devtoolsOpen) {
+  //     devtoolsOpen = isOpen;
+  //     box.classList.toggle("dev-blur", devtoolsOpen);
+  //   }
+  // }, 1000);
 }
 
 function OpenAddModal() {
