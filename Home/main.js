@@ -1,13 +1,3 @@
-// ==========================================================
-// ⚠️ افتراضات لازم تتأكد منها (عدّلها لو مختلفة عندك):
-// 1) currentUser.role = "مبرمج"  (نص واحد). لو عندك array بدل كده
-//    (مثلاً currentUser.roles) هتلاقي دالة isProgrammer() تحتها،
-//    مفعّل فيها الشرط التاني جاهز.
-// 2) UpdateQuestionDTO في الباك اند شكله { Id, Content }.
-//    لو فيه حقول تانية مطلوبة (زي UserId) زودها في body الفetch
-//    بتاع handleEditQuestion.
-// ==========================================================
-
 // ---------- theme ----------
 const root = document.documentElement;
 const themeToggle = document.getElementById("themeToggle");
@@ -36,19 +26,14 @@ function isStaff() {
   return GNav.isStaff(currentUser);
 }
 
-// عدّل الشرط ده لو شكل currentUser مختلف (مثلاً roles array)
-function isProgrammer() {
-  if (!currentUser) return false;
-  if (currentUser.roleName === "مبرمج") return true;
-  if (Array.isArray(currentUser.roles) && currentUser.roles.includes("مبرمج"))
-    return true;
-  return false;
-}
-
+// صاحب السؤال أو المبرمج بس هو اللي يقدر يعدّل/يمسح — بيجرب أكتر من اسم
+// للحقل عشان يتوافق مع أي شكل يرجعه الباك إند لصاحب السؤال
 function canManageQuestion(q) {
   const ownerId = q.userId ?? q.UserId ?? q.studentId ?? q.StudentId;
+
   const isOwner = ownerId != null && String(ownerId) === String(currentUser.id);
-  return isOwner || isProgrammer();
+
+  return isOwner || GNav.isStaff(currentUser);
 }
 
 GNav.mount("#gnavMount", "home");
@@ -148,7 +133,6 @@ likesModalOverlay.addEventListener("click", (e) => {
   if (e.target === likesModalOverlay) closeLikesModal();
 });
 
-// عدّل شكل الـ HTML جوه لو عندك كلاسات CSS مختلفة لـ qa-view / qa-edit-box
 function renderQuestionItem(q) {
   const canManage = canManageQuestion(q);
   return `
@@ -405,7 +389,6 @@ function attachCardHandlers() {
       if (likes.length) openLikesModal(likes);
     });
 
-    // ---------- حذف / تعديل سؤال (لصاحب السؤال أو المبرمج فقط) ----------
     async function handleDeleteQuestion(id) {
       try {
         const res = await fetch(`${QUESTION_API}/DeleteQuestion/${id}`, {
@@ -433,7 +416,6 @@ function attachCardHandlers() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${currentUser.token}`,
           },
-          // عدّل الحقول دي لو UpdateQuestionDTO مختلف عندك (مثلاً محتاج UserId كمان)
           body: JSON.stringify({
             Id: Number(id),
             Content: newContent,
