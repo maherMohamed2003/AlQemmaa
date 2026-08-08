@@ -149,7 +149,15 @@
       fetch(`${PING_API}/${user.id}`, {
         method: "POST",
         headers: user.token ? { Authorization: `Bearer ${user.token}` } : {},
-      }).catch((err) => console.log(err));
+      })
+        .then((res) => {
+          // السيرفر بيرجع 403 لما اليوزر يبقى مبلوك (يبدأها Controller.Ping
+          // في الباك إند)، هنا لازم نعمل logout فوري بدل ما نستنى دقيقة تانية
+          if (res.status === 403) {
+            logout(user);
+          }
+        })
+        .catch((err) => console.log(err));
     };
 
     sendPing(); // أول بينج فورًا لحظة تحميل الصفحة
