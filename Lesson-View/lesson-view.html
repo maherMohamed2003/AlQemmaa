@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصّة القمة — مشاهدة الحصة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <!-- theme checkbox: works with zero JS via body:has() above -->
+  <input type="checkbox" id="themeSwitch">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">القمة</span>
+      <span class="brand-word">منصّة القمة لتعليم اللغة العربية</span>
+    </div>
+    <div class="topbar-actions">
+      <span id="gnavMount"></span>
+      <label class="theme-toggle" for="themeSwitch" aria-label="تبديل الوضع الليلي/النهاري">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    </div>
+  </header>
+
+  <div id="cont" class="page-wrap">
+
+
+
+
+  </div>
+
+  <!-- ============== مودال الإعجابات (يتملأ بالجافاسكريبت) ============== -->
+  <div class="modal-overlay" id="likesModalOverlay">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 class="modal-title">الإعجابات</h2>
+        <a class="modal-close" id="likesModalClose" aria-label="إغلاق">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </a>
+      </div>
+      <div class="likes-list" id="likesModalList"></div>
+    </div>
+  </div>
+
+  <script src="../Shared/browser-guard.js"></script>
+<script src="../Shared/config.js"></script>
+<script src="../Shared/nav.js"></script>
+  <script src="./main.js"></script>
+  <script src="../Shared/contact-widget.js"></script>
+</body>
+</html>

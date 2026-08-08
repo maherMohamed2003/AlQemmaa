@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصّة القمة — إدارة الدروس</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <!-- theme checkbox: works with zero JS via body:has() above -->
+  <input type="checkbox" id="themeSwitch">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">القمة</span>
+      <span class="brand-word">مِنصّة القمة لتعليم اللغة العربية</span>
+    </div>
+    <div class="topbar-actions">
+      <span id="gnavMount"></span>
+      <label class="theme-toggle" for="themeSwitch" aria-label="تبديل الوضع الليلي/النهاري">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    </div>
+  </header>
+
+  <div class="page-head">
+    <div>
+      <span class="eyebrow">لوحة التحكم</span>
+      <h1 class="page-title">إدارة الدروس
+        <svg class="underline-ink" viewBox="0 0 130 13" aria-hidden="true"><path d="M3 7c18-5 35-5 52-1s44 4 72-2"/></svg>
+      </h1>
+    </div>
+    <a class="add-btn staff-only" href="../Add New Lesson/index.html" style="display:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      إضافة درس جديد
+    </a>
+  </div>
+
+  <main class="lessons-wrap">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="lessonSearchInput" class="search-input" placeholder="ابحث باسم الدرس..." autocomplete="off">
+    </div>
+
+    <div id="html" class="lessons-grid">
+
+      
+
+      
+
+    </div>
+
+    <!-- حالة عدم وجود دروس — أظهرها بدل الجريد لما تكون القائمة فاضية
+    <div class="empty-state">لا توجد دروس مضافة حتى الآن.</div>
+    -->
+  </main>
+
+  <!-- ============== مودال التعديل (Markup فقط — الفتح/الغلق والحفظ عليك) ============== -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 class="modal-title">تعديل الدرس</h2>
+        <a class="modal-close" onclick="closeEditMode()"  aria-label="إغلاق">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </a>
+      </div>
+      <form>
+        <div class="field">
+          <label for="lessonTitle">عنوان الدرس</label>
+          <input type="text" id="lessonTitle" name="Title" placeholder="مثال: درس الإعراب - الجزء الأول">
+        </div>
+        <div class="field">
+          <label for="lessonDesc">وصف الدرس</label>
+          <textarea id="lessonDesc" name="Description" placeholder="اكتب وصفًا مختصرًا لمحتوى الدرس..."></textarea>
+        </div>
+        <div class="field">
+          <label for="lessonVideoUrl">رابط فيديو الدرس</label>
+          <input type="url" id="lessonVideoUrl" name="VideoUrl" placeholder="الصق رابط الفيديو هنا (يوتيوب، فيميو، ...)" dir="ltr">
+        </div>
+        <div class="field">
+          <label for="lessonYear">الصف الدراسي</label>
+          <select id="lessonYear" name="Year">
+            <option value="1">الصف الأول الإعدادي</option>
+            <option value="2">الصف الثاني الإعدادي</option>
+            <option value="3">الصف الثالث الإعدادي</option>
+            <option value="4">الصف الأول الثانوي</option>
+            <option value="5">الصف الثاني الثانوي</option>
+            <option value="6">الصف الثالث الثانوي</option>
+          </select>
+        </div>
+        <input type="hidden" name="Id" value="">
+        <div class="modal-actions">
+          <a class="btn btn-ghost" href="javascript:void(0)" onclick="CloseEditModal()">
+    إلغاء
+</a>
+          <button type="button"
+        class="btn btn-primary"
+        id="saveEditBtn"
+        onclick="EditLesson()">
+    <span class="btn-spinner" id="saveEditSpinner" hidden></span>
+    <span id="saveEditBtnText">حفظ التعديلات</span>
+</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============== مودال تأكيد الحذف (Markup فقط) ============== -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal confirm-modal">
+      <div class="confirm-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6h16z"/></svg>
+      </div>
+      <h2 class="modal-title" style="margin-bottom:10px;">حذف الدرس</h2>
+      <p class="confirm-text">هل أنت متأكد من حذف هذا الدرس؟ لا يمكن التراجع عن هذا الإجراء.</p>
+      <div class="modal-actions">
+        <a class="btn btn-ghost" href="javascript:void(0)" onclick="CloseDeleteModal()">
+    إلغاء
+</a>
+        <button type="button"
+            class="btn btn-danger"
+            id="confirmDeleteBtn"
+            onclick="DeleteLesson()">
+    <span class="btn-spinner" id="confirmDeleteSpinner" hidden></span>
+    <span id="confirmDeleteBtnText">حذف نهائيًا</span>
+</button>
+      </div>
+    </div>
+  </div>
+<script src="../Shared/browser-guard.js"></script>
+<script src="../Shared/config.js"></script>
+<script src="../Shared/nav.js"></script>
+<script src="./main.js"></script>
+  <script src="../Shared/contact-widget.js"></script>
+</body>
+</html>
