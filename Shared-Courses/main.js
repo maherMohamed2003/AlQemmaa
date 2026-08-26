@@ -339,6 +339,7 @@ function OpenVideoModal(id) {
   
   wireVideoModalProtection();
   ensureVideoOverlayBar();
+  ensureVideoTopBar(course);
 }
 
 // ===============================
@@ -390,6 +391,45 @@ function ensureVideoOverlayBar() {
   };
 
   ensureFullscreenButton(wrapper);
+}
+
+// ===============================
+// شريط تغطية فوق (أعلى الفيديو - ناحية الشمال بس) بيعرض اسم المدرس واسم الدرس
+// وبيغطي تحته أيقونات يوتيوب اللي ع الشمال، وسايبين اللي ع اليمين ظاهرة زي ما هي
+// (نفس فكرة الشريط اللي تحت، لكن هنا مش بعرض الفيديو كامل عشان محتاجين جزء اليمين)
+// ===============================
+function ensureVideoTopBar(course) {
+  const player = document.getElementById("videoModalPlayer");
+  if (!player) return;
+
+  let wrapper = player.parentElement;
+  if (!wrapper.classList.contains("video-player-wrap")) return; // لازم ensureVideoOverlayBar يتنادي الأول
+
+  let topBar = document.getElementById("videoModalTopBar");
+  if (!topBar) {
+    topBar = document.createElement("div");
+    topBar.id = "videoModalTopBar";
+    topBar.className = "video-top-hide-bar";
+    wrapper.appendChild(topBar);
+
+    const teacherEl = document.createElement("span");
+    teacherEl.id = "videoModalTopBarTeacher";
+    teacherEl.className = "video-top-hide-bar-teacher";
+
+    const titleEl = document.createElement("span");
+    titleEl.id = "videoModalTopBarTitle";
+    titleEl.className = "video-top-hide-bar-title";
+
+    topBar.appendChild(teacherEl);
+    topBar.appendChild(titleEl);
+  }
+
+  document.getElementById("videoModalTopBarTeacher").textContent =
+    "أ. " + (course && course.userName ? course.userName : "عبدالرحمن مهني");
+  document.getElementById("videoModalTopBarTitle").textContent =
+    (course && course.title) || "";
+
+  topBar.style.display = "flex";
 }
 
 // ===============================
@@ -452,6 +492,9 @@ function CloseVideoModal() {
   // الشريط بيختفي بس هنا - وقت ما تقفل صفحة الدرس
   const bar = document.getElementById("videoModalHideBar");
   if (bar) bar.style.display = "none";
+
+  const topBar = document.getElementById("videoModalTopBar");
+  if (topBar) topBar.style.display = "none";
 
   player.src = "";
   videoModal.style.display = "none";
