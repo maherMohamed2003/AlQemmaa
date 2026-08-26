@@ -380,6 +380,9 @@ function ensureVideoOverlayBar() {
   bar.style.cursor = "pointer";
   bar.style.pointerEvents = "auto"; // "auto" عشان الضغط عليه يشتغل
   bar.style.display = "block";      // نتأكد إنه ظاهر تاني كل ما نفتح فيديو جديد
+  let bar2 = bar;
+  bar2.style.bottom = "500";
+  
 
   // الضغط على الشريط يودي للهوم
   bar.onclick = () => {
