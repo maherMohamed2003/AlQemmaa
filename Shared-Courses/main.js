@@ -423,9 +423,6 @@ function ensureVideoTopBar(course) {
     topBar.appendChild(teacherEl);
     topBar.appendChild(titleEl);
   }
-topBar.addEventListener("click",{
-  window.location.href = "../Home/home.html";
-});
   document.getElementById("videoModalTopBarTeacher").textContent =
     "أ. " + (course && course.userName ? course.userName : "عبدالرحمن مهني");
   document.getElementById("videoModalTopBarTitle").textContent =
@@ -433,6 +430,11 @@ topBar.addEventListener("click",{
 
   topBar.style.display = "flex";
 }
+
+topBar.addEventListener("click",() => {
+  window.location.href = "../Home/home.html";
+});
+topBar.style.backgroundColor = "black";
 
 // ===============================
 // زرار تكبير الفيديو (بديل مخصّص لزرار اليوتيوب الأصلي اللي اتقفل بـ fs=0)
@@ -457,7 +459,7 @@ function ensureFullscreenButton(wrapper) {
     btn.style.display = "flex";
     btn.style.alignItems = "center";
     btn.style.justifyContent = "center";
-    btn.style.background = "rgba(0,0,0,)";
+    btn.style.background = "rgba(0,0,0)";
     btn.style.border = "none";
     btn.style.borderRadius = "8px";
     btn.style.cursor = "pointer";
