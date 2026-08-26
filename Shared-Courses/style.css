@@ -518,6 +518,30 @@ ytm-player-fullscreen-action-menu-host .fullscreen-action-menu {
     75%{ top:65%; left:15%; }
     100%{ top:10%; left:8%; }
   }
+  /* شريط تغطية أعلى الفيديو - ناحية الشمال بس (بيغطي أيقونات يوتيوب هناك) */
+  /* بيعرض اسم المدرس واسم الدرس، وسايبين مساحة ع اليمين من غير تغطية عشان أيقونات يوتيوب المحتاجينها هناك */
+  .video-top-hide-bar{
+    position:absolute; top:0; left:0; right:130px; z-index:5;
+    display:none; flex-direction:column; justify-content:center; gap:2px;
+    padding:10px 14px 14px;
+    background:linear-gradient(to bottom, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.45) 65%, transparent 100%);
+    pointer-events:none; overflow:hidden;
+    direction:rtl; text-align:right;
+  }
+  .video-top-hide-bar-teacher{
+    font-family:'Cairo', sans-serif; font-size:12.5px; font-weight:700;
+    color:#F1E9D6; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .video-top-hide-bar-title{
+    font-family:'Cairo', sans-serif; font-size:11.5px; font-weight:500;
+    color:rgba(255,255,255,0.78); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  @media (max-width: 640px){
+    .video-top-hide-bar{ right:90px; height:auto; padding:8px 10px 10px; }
+    .video-top-hide-bar-teacher{ font-size:11.5px; }
+    .video-top-hide-bar-title{ font-size:10.5px; }
+  }
+
   .video-modal-box.dev-blur iframe{ filter:blur(22px); }
   .dev-blur-notice{
     display:none; position:absolute; inset:0; z-index:3;
