@@ -214,38 +214,12 @@ window.onload = async function () {
 // بيحمّل الفيديو جوه الـ iframe: لو الرابط من يوتيوب بنستخدم مشغّل يوتيوب الحقيقي
 // (YT.Player) عشان نقدر نتحكم في الجودة برمجيًا، وغير كده (فيميو مثلًا) بنستخدم iframe عادي.
 function loadVideo(videoLink) {
-  const youTubeId =
-    window.YTPlayerHelper && window.YTPlayerHelper.extractYouTubeId(videoLink);
+  const iframe = document.getElementById("lessonVideo");
 
-  if (youTubeId) {
-    window.YTPlayerHelper.loadIframeApi().then((YT) => {
-      lessonPlayer = new YT.Player("lessonVideo", {
-        videoId: youTubeId,
-        playerVars: {
-          controls: 1,
-          rel: 0,
-          modestbranding: 1,
-          fs: 0,
-          playsinline: 1,
-          origin: window.location.origin,
-        },
-        events: {
-          onReady: () => {
-            const iframe = lessonPlayer.getIframe();
-            if (iframe) iframe.oncontextmenu = () => false;
-            ensureQualityControl(lessonPlayer);
-          },
-        },
-      });
-    });
-  } else {
-    // فيديو مش من يوتيوب (فيميو مثلًا) - نستخدم iframe عادي بدون زرار جودة مخصص
-    const iframe = document.getElementById("lessonVideo");
-    if (iframe) {
-      iframe.src = toEmbedUrl(videoLink);
-      iframe.oncontextmenu = () => false;
-    }
-  }
+  if (!iframe || !videoLink) return;
+
+  iframe.src = toEmbedUrl(videoLink);
+  iframe.oncontextmenu = () => false;
 }
 
 function wireLikes() {
