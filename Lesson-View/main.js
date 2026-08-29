@@ -26,38 +26,44 @@ function escapeHtml(str) {
 }
 
 // يحوّل روابط المشاركة الشائعة (يوتيوب، فيميو) إلى رابط تضمين (Embed) صالح للـ iframe.
+
 function toEmbedUrl(url) {
   try {
+    if (!url) return "";
+
     const u = new URL(url);
 
-    // enablejsapi=1 و origin مطلوبين عشان لو احتجنا نستخدم YouTube IFrame Player API لاحقًا،
-    // و fs=0 بيقفل زرار Fullscreen الأصلي بتاع يوتيوب عشان بنستخدم زرارنا الخاص بدل منه
-    const jsApiOrigin = encodeURIComponent(window.location.origin);
+    // YouTube
+    if (u.hostname.includes("youtube.com") || u.hostname.includes("youtu.be")) {
+      let videoId = "";
 
-    if (u.hostname.includes("youtu.be")) {
-      const id = u.pathname.replace("/", "");
-      return `https://www.youtube.com/embed/${id}?controls=1&fs=0&rel=0&modestbranding=1&enablejsapi=1&origin=${jsApiOrigin}`;
+      // https://www.youtube.com/watch?v=VIDEO_ID
+      if (u.hostname.includes("youtube.com") && u.pathname === "/watch") {
+        videoId = u.searchParams.get("v");
+      }
+
+      // https://youtu.be/VIDEO_ID
+      else if (u.hostname.includes("youtu.be")) {
+        videoId = u.pathname.split("/").filter(Boolean)[0];
+      }
+
+      // https://www.youtube.com/embed/VIDEO_ID
+      else if (u.hostname.includes("youtube.com") && u.pathname.startsWith("/embed/")) {
+        videoId = u.pathname.split("/embed/")[1].split("/")[0];
+      }
+
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}?controls=1&fs=0&rel=0&modestbranding=1`;
+      }
     }
 
-    if (u.hostname.includes("youtube.com")) {
-      if (u.pathname === "/watch" && u.searchParams.get("v")) {
-        const id = u.searchParams.get("v");
-        return `https://www.youtube.com/embed/${id}?controls=1&fs=0&rel=0&modestbranding=1&enablejsapi=1&origin=${jsApiOrigin}`;
-      }
-      if (u.pathname.startsWith("/embed/")) {
-        u.searchParams.set("fs", "0");
-        u.searchParams.set("rel", "0");
-        u.searchParams.set("modestbranding", "1");
-        u.searchParams.set("enablejsapi", "1");
-        u.searchParams.set("origin", window.location.origin);
-        if (!u.searchParams.has("controls")) u.searchParams.set("controls", "1");
-        return u.toString();
-      }
-    }
-
+    // Vimeo
     if (u.hostname.includes("vimeo.com") && !u.hostname.includes("player")) {
       const id = u.pathname.split("/").filter(Boolean).pop();
-      if (id && /^\d+$/.test(id)) return `https://player.vimeo.com/video/${id}?controls=1`;
+
+      if (id && /^\d+$/.test(id)) {
+        return `https://player.vimeo.com/video/${id}?controls=1`;
+      }
     }
 
     return url;
