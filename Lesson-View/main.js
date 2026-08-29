@@ -220,14 +220,49 @@ window.onload = async function () {
 // بيحمّل الفيديو جوه الـ iframe: لو الرابط من يوتيوب بنستخدم مشغّل يوتيوب الحقيقي
 // (YT.Player) عشان نقدر نتحكم في الجودة برمجيًا، وغير كده (فيميو مثلًا) بنستخدم iframe عادي.
 function loadVideo(videoLink) {
-  const iframe = document.getElementById("lessonVideo");
+    const iframe = document.getElementById("lessonVideo");
 
-  if (!iframe || !videoLink) return;
+    if (!iframe) {
+        console.log("iframe not found");
+        return;
+    }
 
-  iframe.src = toEmbedUrl(videoLink);
-  iframe.oncontextmenu = () => false;
+    console.log("videoLink from API:", videoLink);
+
+    let videoId = "";
+
+    try {
+        const url = new URL(videoLink);
+
+        if (url.hostname.includes("youtube.com")) {
+            if (url.pathname === "/watch") {
+                videoId = url.searchParams.get("v");
+            }
+            else if (url.pathname.startsWith("/embed/")) {
+                videoId = url.pathname.split("/embed/")[1].split("/")[0];
+            }
+        }
+        else if (url.hostname.includes("youtu.be")) {
+            videoId = url.pathname.split("/").filter(Boolean)[0];
+        }
+    } catch (e) {
+        console.error("Invalid video URL:", e);
+    }
+
+    console.log("YouTube ID:", videoId);
+
+    if (!videoId) {
+        console.error("Could not extract YouTube ID");
+        return;
+    }
+
+    const embedUrl =
+        `https://www.youtube.com/embed/${videoId}`;
+
+    console.log("FINAL IFRAME SRC:", embedUrl);
+
+    iframe.src = embedUrl;
 }
-
 function wireLikes() {
   const likeSwitch = document.getElementById("likeSwitch");
   const likeCountBtn = document.getElementById("likeCountBtn");
