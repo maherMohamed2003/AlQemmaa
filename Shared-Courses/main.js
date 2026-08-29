@@ -343,52 +343,28 @@ function OpenVideoModal(id) {
 // بيحمّل الفيديو جوه الـ iframe: لو الرابط من يوتيوب بنستخدم مشغّل يوتيوب الحقيقي
 // (YT.Player) عشان نقدر نتحكم في الجودة برمجيًا، وغير كده (فيميو مثلًا) بنستخدم iframe عادي.
 function loadModalVideo(videoLink) {
-  const youTubeId =
-    window.YTPlayerHelper && window.YTPlayerHelper.extractYouTubeId(videoLink);
+  const iframe = document.getElementById("videoModalPlayer");
 
-  if (youTubeId) {
-    window.YTPlayerHelper.loadIframeApi().then((YT) => {
-      if (videoModalPlayer && typeof videoModalPlayer.loadVideoById === "function") {
-        // فيه مشغّل شغّال بالفعل من فتحة سابقة - نعيد استخدامه بدل ما نعمل واحد جديد
-        videoModalPlayer.loadVideoById(youTubeId);
-        ensureQualityControl(videoModalPlayer);
-        return;
-      }
+  if (!iframe || !videoLink) return;
 
-      videoModalPlayer = new YT.Player("videoModalPlayer", {
-        videoId: youTubeId,
-        playerVars: {
-          controls: 1,
-          rel: 0,
-          modestbranding: 1,
-          fs: 0,
-          playsinline: 1,
-          origin: window.location.origin,
-        },
-        events: {
-          onReady: () => {
-            const iframe = videoModalPlayer.getIframe();
-            if (iframe) iframe.oncontextmenu = () => false;
-            ensureQualityControl(videoModalPlayer);
-          },
-        },
-      });
-    });
-  } else {
-    // فيديو مش من يوتيوب (فيميو مثلًا) - نستخدم iframe عادي بدون زرار جودة مخصص
-    if (videoModalPlayer && typeof videoModalPlayer.stopVideo === "function") {
-      try {
-        videoModalPlayer.stopVideo();
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    const iframe = document.getElementById("videoModalPlayer");
-    if (iframe) {
-      iframe.src = toEmbedUrl(videoLink);
-      iframe.oncontextmenu = () => false;
-    }
-  }
+  // حوّل رابط YouTube إلى Embed URL
+  const embedUrl = toEmbedUrl(videoLink);
+
+  // حط الـ Embed مباشرة في الـ iframe
+  iframe.src = embedUrl;
+
+  // إعدادات الـ iframe
+  iframe.setAttribute(
+    "allow",
+    "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  );
+
+  iframe.setAttribute("allowfullscreen", "");
+
+  // منع Right Click
+  iframe.oncontextmenu = () => false;
+
+  console.log("Video Embed URL:", embedUrl);
 }
 
 // ===============================
