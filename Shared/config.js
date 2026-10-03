@@ -9,7 +9,7 @@
 
 (function () {
   // عنوان جذر السيرفر (من غير /api ومن غير / في الآخر)
-  const API_ROOT = "https://softprime-001-site1.ftempurl.com";
+  const API_ROOT = "https://ahmesalah-001-site1.gtempurl.com";
 
   window.APP_CONFIG = {
     // جذر السيرفر (يستخدم لبناء روابط الفيديوهات مثلًا)
